@@ -34,7 +34,7 @@ declare const _default: {
             data?: any;
         }>;
         CARD_PAY: (body: {
-            amount: string;
+            amount: string | number;
             token: string;
         }) => Promise<{
             success: boolean;

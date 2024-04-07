@@ -135,7 +135,7 @@ const CHECKER = async (
   }
 };
 const CARD_PAY = async (body: {
-  amount: string;
+  amount: number | string;
   token: string;
 }): Promise<{
   success: boolean;
