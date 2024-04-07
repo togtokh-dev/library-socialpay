@@ -39,12 +39,28 @@ declare const _default: {
         }) => Promise<{
             success: boolean;
             message: string;
-            data?: any;
+            data?: {
+                amount: string;
+                approvalCode: string;
+                errorDesc: string;
+                checksum: string;
+                errorCode: string;
+                transactionId: string;
+                cardNumber: string;
+            };
         }>;
         CHECKER_CARD_PAY: (transactionId: string) => Promise<{
             success: boolean;
             message: string;
-            data?: any;
+            data?: {
+                amount: string;
+                errorDesc: string;
+                checksum: string;
+                errorCode: string;
+                transactionId: string;
+                cardNumber: string;
+                token: string;
+            };
         }>;
     };
 };

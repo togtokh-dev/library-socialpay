@@ -148,7 +148,15 @@ const CARD_PAY = async (body: {
 }): Promise<{
   success: boolean;
   message: string;
-  data?: any;
+  data?: {
+    amount: string;
+    approvalCode: string;
+    errorDesc: string;
+    checksum: string;
+    errorCode: string;
+    transactionId: string;
+    cardNumber: string;
+  };
 }> => {
   try {
     const data = {
@@ -194,7 +202,15 @@ const CHECKER_CARD_PAY = async (
 ): Promise<{
   success: boolean;
   message: string;
-  data?: any;
+  data?: {
+    amount: string;
+    errorDesc: string;
+    checksum: string;
+    errorCode: string;
+    transactionId: string;
+    cardNumber: string;
+    token: string;
+  };
 }> => {
   try {
     const data = {
