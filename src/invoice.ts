@@ -1,0 +1,95 @@
+import axios from "axios";
+import SOCIAL_PAY from ".";
+import { createHmac } from "crypto";
+const hmac256 = async (key: string, message: string) => {
+  const hash = createHmac("sha256", key).update(message);
+  return hash.digest("hex");
+};
+const mongoObjectId = async () => {
+  const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
+  return (
+    timestamp +
+    "xxxxxxxxxxxxxxxx"
+      .replace(/[x]/g, function () {
+        return ((Math.random() * 16) | 0).toString(16);
+      })
+      .toLowerCase()
+  );
+};
+
+type createT = {
+  amount: number | string;
+  callback: string;
+  genToken: "Y" | "N";
+  socialDeeplink: "Y" | "N";
+};
+type createBackT = {
+  socialDeeplink?: string;
+  checksum: string;
+  invoice: string;
+  transactionId: string;
+  url: {
+    en: string;
+    mn: string;
+  };
+};
+
+const CREATE = async (
+  body: createT
+): Promise<{
+  success: boolean;
+  message: string;
+  data?: createBackT;
+}> => {
+  try {
+    const data = {
+      amount: body.amount,
+      callback: body.callback,
+      checksum: "",
+      genToken: body.genToken,
+      returnType: "GET",
+      transactionId: await mongoObjectId(),
+      socialDeeplink: body.socialDeeplink,
+    };
+    data.checksum = await hmac256(
+      SOCIAL_PAY.key,
+      `${data.transactionId}${data.amount}${data.returnType}${data.callback}`
+    );
+    const res = await axios.post(`${SOCIAL_PAY.host}/api/invoice`, data, {
+      headers: {
+        Authorization: `Bearer ${SOCIAL_PAY.token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.data) {
+      return {
+        success: true,
+        message: "success",
+        data: {
+          ...res.data,
+          url: {
+            en:
+              "https://ecommerce.golomtbank.com/payment/en/" +
+                res.data?.transactionId || "",
+            mn:
+              "https://ecommerce.golomtbank.com/payment/mn/" +
+                res.data?.transactionId || "",
+          },
+        },
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.message || "",
+      };
+    }
+  } catch (error) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error",
+    };
+  }
+};
+
+export default { CREATE };
