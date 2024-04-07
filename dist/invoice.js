@@ -148,4 +148,41 @@ const CARD_PAY = async (body) => {
         };
     }
 };
-exports.default = { CREATE, CHECKER, CARD_PAY };
+const CHECKER_CARD_PAY = async (transactionId) => {
+    var _a, _b, _c;
+    try {
+        const data = {
+            checksum: "",
+            transactionId: transactionId,
+        };
+        data.checksum = await hmac256(_1.default.key, `${data.transactionId}${data.transactionId}`);
+        const res = await axios_1.default.post(`${_1.default.host}/api/check`, data, {
+            headers: {
+                Authorization: `Bearer ${_1.default.token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        if (res.data.errorCode == "000") {
+            return {
+                success: true,
+                message: "success",
+                data: res.data,
+            };
+        }
+        else {
+            return {
+                success: false,
+                message: res.data.errorDesc,
+                data: res.data,
+            };
+        }
+    }
+    catch (error) {
+        console.log("FAILED", (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data);
+        return {
+            success: false,
+            message: ((_c = (_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.message) || "error",
+        };
+    }
+};
+exports.default = { CREATE, CHECKER, CARD_PAY, CHECKER_CARD_PAY };

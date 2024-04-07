@@ -41,6 +41,11 @@ declare const _default: {
             message: string;
             data?: any;
         }>;
+        CHECKER_CARD_PAY: (transactionId: string) => Promise<{
+            success: boolean;
+            message: string;
+            data?: any;
+        }>;
     };
 };
 export default _default;
