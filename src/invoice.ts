@@ -91,5 +91,94 @@ const CREATE = async (
     };
   }
 };
-
-export default { CREATE };
+const CHECKER = async (
+  transactionId: string
+): Promise<{
+  success: boolean;
+  message: string;
+  data?: any;
+}> => {
+  try {
+    const data = {
+      checksum: "",
+      transactionId: transactionId,
+    };
+    data.checksum = await hmac256(
+      SOCIAL_PAY.key,
+      `${data.transactionId}${data.transactionId}`
+    );
+    const res = await axios.post(`${SOCIAL_PAY.host}/api/inquiry`, data, {
+      headers: {
+        Authorization: `Bearer ${SOCIAL_PAY.token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.data.errorCode == "000") {
+      return {
+        success: true,
+        message: "success",
+        data: res.data,
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.errorDesc,
+        data: res.data,
+      };
+    }
+  } catch (error) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error",
+    };
+  }
+};
+const CARD_PAY = async (body: {
+  amount: string;
+  token: string;
+}): Promise<{
+  success: boolean;
+  message: string;
+  data?: any;
+}> => {
+  try {
+    const data = {
+      amount: body.amount,
+      checksum: "",
+      transactionId: await mongoObjectId(),
+      lang: "en",
+      token: body.token,
+    };
+    data.checksum = await hmac256(
+      SOCIAL_PAY.key,
+      `${data.amount}${data.transactionId}${data.token}`
+    );
+    const res = await axios.post(`${SOCIAL_PAY.host}/api/pay`, data, {
+      headers: {
+        Authorization: `Bearer ${SOCIAL_PAY.token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.data.errorCode == "000") {
+      return {
+        success: true,
+        message: "success",
+        data: res.data,
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.errorDesc,
+        data: res.data,
+      };
+    }
+  } catch (error) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error",
+    };
+  }
+};
+export default { CREATE, CHECKER, CARD_PAY };

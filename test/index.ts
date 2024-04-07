@@ -14,13 +14,6 @@ SOCIAL_PAY.auth
       socialDeeplink: "Y",
     });
     console.log("res", res);
-    // const res = await SOCIAL_PAY.invoice.CREATE.DEEP_LINK({
-    //   callback: "http://www.google.com",
-    //   orderId: "25772338780",
-    //   amount: 4,
-    //   notes: "dpp",
-    // });
-    // console.log(res);
   })
   .catch((e) => {
     console.log(e);

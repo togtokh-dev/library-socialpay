@@ -1,12 +1,11 @@
 {
   "name": "@togtokh.dev/socialpay",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "SOCIAL_PAY is a library for qpay payment gateway. It is a wrapper for axios and https module. It is a simple and easy-to-use library for SOCIAL_PAY payment gateway. It is a wrapper for axios and https module. It is a simple and easy-to-use library for SOCIAL_PAY payment gateway api",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist/",
-    "types/"
+    "dist/"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

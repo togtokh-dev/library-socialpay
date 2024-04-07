@@ -1,6 +1,5 @@
 declare const _default: {
     token: string;
-    merchant_id: string;
     key: string;
     host: string;
     auth: {
@@ -28,6 +27,19 @@ declare const _default: {
                     mn: string;
                 };
             };
+        }>;
+        CHECKER: (transactionId: string) => Promise<{
+            success: boolean;
+            message: string;
+            data?: any;
+        }>;
+        CARD_PAY: (body: {
+            amount: string;
+            token: string;
+        }) => Promise<{
+            success: boolean;
+            message: string;
+            data?: any;
         }>;
     };
 };
