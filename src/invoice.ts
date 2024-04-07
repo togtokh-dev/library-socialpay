@@ -70,10 +70,18 @@ const CREATE = async (
           url: {
             en:
               "https://ecommerce.golomtbank.com/payment/en/" +
-                res.data?.transactionId || "",
+                res.data?.invoice || "",
             mn:
               "https://ecommerce.golomtbank.com/payment/mn/" +
-                res.data?.transactionId || "",
+                res.data?.invoice || "",
+          },
+          url_socialpay: {
+            en:
+              "https://ecommerce.golomtbank.com/socialpay/en/" +
+                res.data?.invoice || "",
+            mn:
+              "https://ecommerce.golomtbank.com/socialpay/mn/" +
+                res.data?.invoice || "",
           },
         },
       };

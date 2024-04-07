@@ -17,7 +17,7 @@ const mongoObjectId = async () => {
             .toLowerCase());
 };
 const CREATE = async (body) => {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f, _g;
     try {
         const data = {
             amount: body.amount,
@@ -43,9 +43,15 @@ const CREATE = async (body) => {
                     ...res.data,
                     url: {
                         en: "https://ecommerce.golomtbank.com/payment/en/" +
-                            ((_a = res.data) === null || _a === void 0 ? void 0 : _a.transactionId) || "",
+                            ((_a = res.data) === null || _a === void 0 ? void 0 : _a.invoice) || "",
                         mn: "https://ecommerce.golomtbank.com/payment/mn/" +
-                            ((_b = res.data) === null || _b === void 0 ? void 0 : _b.transactionId) || "",
+                            ((_b = res.data) === null || _b === void 0 ? void 0 : _b.invoice) || "",
+                    },
+                    url_socialpay: {
+                        en: "https://ecommerce.golomtbank.com/socialpay/en/" +
+                            ((_c = res.data) === null || _c === void 0 ? void 0 : _c.invoice) || "",
+                        mn: "https://ecommerce.golomtbank.com/socialpay/mn/" +
+                            ((_d = res.data) === null || _d === void 0 ? void 0 : _d.invoice) || "",
                     },
                 },
             };
@@ -58,10 +64,10 @@ const CREATE = async (body) => {
         }
     }
     catch (error) {
-        console.log("FAILED", (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.data);
+        console.log("FAILED", (_e = error === null || error === void 0 ? void 0 : error.response) === null || _e === void 0 ? void 0 : _e.data);
         return {
             success: false,
-            message: ((_e = (_d = error === null || error === void 0 ? void 0 : error.response) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.message) || "error",
+            message: ((_g = (_f = error === null || error === void 0 ? void 0 : error.response) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.message) || "error",
         };
     }
 };
