@@ -62,6 +62,40 @@ declare const _default: {
                 token: string;
             };
         }>;
+        getSettlementDetails: (page: string, size: string, startDate: string, endDate: string, merchantId: string) => Promise<{
+            success: boolean;
+            message: string;
+            data?: {
+                id: number;
+                merchantId: string;
+                terminalId: string;
+                batchNumber: string;
+                invoiceNumber: string;
+                cardNumber: string;
+                token: string;
+                amount: string;
+                merchantInvoice: string;
+                respCode: string;
+                respDesc: string;
+                tranTime: string;
+                tranDate: string;
+                sysReference: string;
+                approvalCode: string;
+                freeText1: string;
+                freeText2: string;
+                freeText3: string;
+                requestDate: string;
+                reversedDate: string;
+                checkedDate: string;
+                transferStatus: string;
+            }[];
+            pageable?: {
+                first: true;
+                last: true;
+                totalPages: 1;
+                totalElements: 1;
+            };
+        }>;
     };
 };
 export default _default;

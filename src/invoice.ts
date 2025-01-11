@@ -248,4 +248,104 @@ const CHECKER_CARD_PAY = async (
     };
   }
 };
-export default { CREATE, CHECKER, CARD_PAY, CHECKER_CARD_PAY };
+const getSettlementDetails = async (
+  page: string,
+  size: string,
+  startDate: string,
+  endDate: string,
+  merchantId: string
+): Promise<{
+  success: boolean;
+  message: string;
+  data?: {
+    id: number;
+    merchantId: string;
+    terminalId: string;
+    batchNumber: string;
+    invoiceNumber: string;
+    cardNumber: string;
+    token: string;
+    amount: string;
+    merchantInvoice: string;
+    respCode: string;
+    respDesc: string;
+    tranTime: string;
+    tranDate: string;
+    sysReference: string;
+    approvalCode: string;
+    freeText1: string;
+    freeText2: string;
+    freeText3: string;
+    requestDate: string;
+    reversedDate: string;
+    checkedDate: string;
+    transferStatus: string;
+  }[];
+  pageable?: {
+    first: true;
+    last: true;
+    totalPages: 1;
+    totalElements: 1;
+  };
+}> => {
+  try {
+    // Request data
+    const data = {
+      checksum: "",
+      token: SOCIAL_PAY.token,
+      merchantId: merchantId,
+    };
+
+    // Generate checksum
+    data.checksum = await hmac256(
+      SOCIAL_PAY.key,
+      `${data.merchantId}${data.token}`
+    );
+
+    // Log API endpoint and request data (optional for debugging)
+    console.log(
+      `${SOCIAL_PAY.host}/api/getSettlementDetails?page=${page}&size=${size}&start=${startDate}&end=${endDate}`
+    );
+    console.log("Request data:", data);
+
+    // Send POST request
+    const res = await axios.post(
+      `${SOCIAL_PAY.host}/api/getSettlementDetails?page=${page}&size=${size}&start=${startDate}&end=${endDate}`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${SOCIAL_PAY.token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    // Handle success response
+    if (res.data.errorCode === "000") {
+      return {
+        success: true,
+        message: "Request successful",
+        data: res.data.content,
+        pageable: res.data.pageable,
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.errorDesc || "Unknown error",
+      };
+    }
+  } catch (error) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error",
+    };
+  }
+};
+export default {
+  CREATE,
+  CHECKER,
+  CARD_PAY,
+  CHECKER_CARD_PAY,
+  getSettlementDetails,
+};

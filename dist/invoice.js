@@ -185,4 +185,55 @@ const CHECKER_CARD_PAY = async (transactionId) => {
         };
     }
 };
-exports.default = { CREATE, CHECKER, CARD_PAY, CHECKER_CARD_PAY };
+const getSettlementDetails = async (page, size, startDate, endDate, merchantId) => {
+    var _a, _b, _c;
+    try {
+        // Request data
+        const data = {
+            checksum: "",
+            token: _1.default.token,
+            merchantId: merchantId,
+        };
+        // Generate checksum
+        data.checksum = await hmac256(_1.default.key, `${data.merchantId}${data.token}`);
+        // Log API endpoint and request data (optional for debugging)
+        console.log(`${_1.default.host}/api/getSettlementDetails?page=${page}&size=${size}&start=${startDate}&end=${endDate}`);
+        console.log("Request data:", data);
+        // Send POST request
+        const res = await axios_1.default.post(`${_1.default.host}/api/getSettlementDetails?page=${page}&size=${size}&start=${startDate}&end=${endDate}`, data, {
+            headers: {
+                Authorization: `Bearer ${_1.default.token}`,
+                "Content-Type": "application/json",
+            },
+        });
+        // Handle success response
+        if (res.data.errorCode === "000") {
+            return {
+                success: true,
+                message: "Request successful",
+                data: res.data.content,
+                pageable: res.data.pageable,
+            };
+        }
+        else {
+            return {
+                success: false,
+                message: res.data.errorDesc || "Unknown error",
+            };
+        }
+    }
+    catch (error) {
+        console.log("FAILED", (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data);
+        return {
+            success: false,
+            message: ((_c = (_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.message) || "error",
+        };
+    }
+};
+exports.default = {
+    CREATE,
+    CHECKER,
+    CARD_PAY,
+    CHECKER_CARD_PAY,
+    getSettlementDetails,
+};

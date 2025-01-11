@@ -7,12 +7,19 @@ SOCIAL_PAY.auth
     "MKZf$)AQmiYAEbBd"
   )
   .then(async (r) => {
-    const res = await SOCIAL_PAY.invoice.CREATE({
-      callback: "http://www.google.com",
-      amount: 4,
-      genToken: "Y",
-      socialDeeplink: "Y",
-    });
+    // const res = await SOCIAL_PAY.invoice.CREATE({
+    //   callback: "http://www.google.com",
+    //   amount: 4,
+    //   genToken: "Y",
+    //   socialDeeplink: "Y",
+    // });
+    const res = await SOCIAL_PAY.invoice.getSettlementDetails(
+      "1",
+      "50",
+      "2025-01-10",
+      "2025-01-12",
+      "MERCHANT_A_BUYANTOGTOKH"
+    );
     console.log("res", res);
   })
   .catch((e) => {
