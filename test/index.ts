@@ -18,7 +18,7 @@ SOCIAL_PAY.auth
       "50",
       "2025-01-10",
       "2025-01-12",
-      "MERCHANT_A_BUYANTOGTOKH"
+      "000009731442621"
     );
     console.log("res", res);
   })
