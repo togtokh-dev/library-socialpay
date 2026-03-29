@@ -96,6 +96,16 @@ declare const _default: {
                 totalElements: 1;
             };
         }>;
+        REFUND: (transactionId: string) => Promise<{
+            success: boolean;
+            message: string;
+            data?: {
+                statusCode: string;
+                desc: string;
+                txnId: string;
+                merchantId: string;
+            };
+        }>;
     };
 };
 export default _default;

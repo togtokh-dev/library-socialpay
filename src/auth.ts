@@ -12,10 +12,14 @@ const TOKEN = async (
   try {
     SOCIAL_PAY.token = token;
     SOCIAL_PAY.key = key;
+    return {
+      success: true,
+      message: "success"
+    };
   } catch (error) {
     return {
       success: false,
-      message: "error",
+      message: "error"
     };
   }
 };

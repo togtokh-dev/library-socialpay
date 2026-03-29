@@ -6,11 +6,15 @@ const TOKEN = async (token, key) => {
     try {
         _1.default.token = token;
         _1.default.key = key;
+        return {
+            success: true,
+            message: "success"
+        };
     }
     catch (error) {
         return {
             success: false,
-            message: "error",
+            message: "error"
         };
     }
 };

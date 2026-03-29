@@ -13,14 +13,16 @@ SOCIAL_PAY.auth
     //   genToken: "Y",
     //   socialDeeplink: "Y",
     // });
-    const res = await SOCIAL_PAY.invoice.getSettlementDetails(
-      "1",
-      "50",
-      "2025-01-10",
-      "2025-01-12",
-      "000009731442621"
-    );
-    console.log("res", res);
+    // const res = await SOCIAL_PAY.invoice.getSettlementDetails(
+    //   "1",
+    //   "50",
+    //   "2025-01-10",
+    //   "2025-01-12",
+    //   "000009731442621"
+    // );
+    // console.log("res", res);
+    // const res = await SOCIAL_PAY.invoice.REFUND("69c8cad142f7b053212b897f");
+    // console.log("res", res);
   })
   .catch((e) => {
     console.log(e);

@@ -26,14 +26,14 @@ const CREATE = async (body) => {
             genToken: body.genToken,
             returnType: "GET",
             transactionId: await mongoObjectId(),
-            socialDeeplink: body.socialDeeplink,
+            socialDeeplink: body.socialDeeplink
         };
         data.checksum = await hmac256(_1.default.key, `${data.transactionId}${data.amount}${data.returnType}${data.callback}`);
         const res = await axios_1.default.post(`${_1.default.host}/api/invoice`, data, {
             headers: {
                 Authorization: `Bearer ${_1.default.token}`,
-                "Content-Type": "application/json",
-            },
+                "Content-Type": "application/json"
+            }
         });
         if (res.data) {
             return {
@@ -45,21 +45,21 @@ const CREATE = async (body) => {
                         en: "https://ecommerce.golomtbank.com/payment/en/" +
                             ((_a = res.data) === null || _a === void 0 ? void 0 : _a.invoice) || "",
                         mn: "https://ecommerce.golomtbank.com/payment/mn/" +
-                            ((_b = res.data) === null || _b === void 0 ? void 0 : _b.invoice) || "",
+                            ((_b = res.data) === null || _b === void 0 ? void 0 : _b.invoice) || ""
                     },
                     url_socialpay: {
                         en: "https://ecommerce.golomtbank.com/socialpay/en/" +
                             ((_c = res.data) === null || _c === void 0 ? void 0 : _c.invoice) || "",
                         mn: "https://ecommerce.golomtbank.com/socialpay/mn/" +
-                            ((_d = res.data) === null || _d === void 0 ? void 0 : _d.invoice) || "",
-                    },
-                },
+                            ((_d = res.data) === null || _d === void 0 ? void 0 : _d.invoice) || ""
+                    }
+                }
             };
         }
         else {
             return {
                 success: false,
-                message: res.data.message || "",
+                message: res.data.message || ""
             };
         }
     }
@@ -67,121 +67,158 @@ const CREATE = async (body) => {
         console.log("FAILED", (_e = error === null || error === void 0 ? void 0 : error.response) === null || _e === void 0 ? void 0 : _e.data);
         return {
             success: false,
-            message: ((_g = (_f = error === null || error === void 0 ? void 0 : error.response) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.message) || "error",
+            message: ((_g = (_f = error === null || error === void 0 ? void 0 : error.response) === null || _f === void 0 ? void 0 : _f.data) === null || _g === void 0 ? void 0 : _g.message) || "error"
         };
     }
 };
 const CHECKER = async (transactionId) => {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e;
     try {
         const data = {
             checksum: "",
-            transactionId: transactionId,
+            transactionId: transactionId
         };
         data.checksum = await hmac256(_1.default.key, `${data.transactionId}${data.transactionId}`);
         const res = await axios_1.default.post(`${_1.default.host}/api/inquiry`, data, {
             headers: {
                 Authorization: `Bearer ${_1.default.token}`,
-                "Content-Type": "application/json",
-            },
+                "Content-Type": "application/json"
+            }
         });
-        if (res.data.errorCode == "000") {
+        if (((_a = res.data) === null || _a === void 0 ? void 0 : _a.errorCode) == "000" || ((_b = res.data) === null || _b === void 0 ? void 0 : _b.statusCode) == "000") {
             return {
                 success: true,
                 message: "success",
-                data: res.data,
+                data: res.data
             };
         }
         else {
             return {
                 success: false,
                 message: res.data.errorDesc,
-                data: res.data,
+                data: res.data
             };
         }
     }
     catch (error) {
-        console.log("FAILED", (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data);
+        console.log("FAILED", (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.data);
         return {
             success: false,
-            message: ((_c = (_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.message) || "error",
+            message: ((_e = (_d = error === null || error === void 0 ? void 0 : error.response) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.message) || "error"
         };
     }
 };
 const CARD_PAY = async (body) => {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e;
     try {
         const data = {
             amount: body.amount,
             checksum: "",
             transactionId: await mongoObjectId(),
             lang: "en",
-            token: body.token,
+            token: body.token
         };
         data.checksum = await hmac256(_1.default.key, `${data.amount}${data.transactionId}${data.token}`);
         const res = await axios_1.default.post(`${_1.default.host}/api/pay`, data, {
             headers: {
                 Authorization: `Bearer ${_1.default.token}`,
-                "Content-Type": "application/json",
-            },
+                "Content-Type": "application/json"
+            }
         });
-        if (res.data.errorCode == "000") {
+        if (((_a = res.data) === null || _a === void 0 ? void 0 : _a.errorCode) == "000" || ((_b = res.data) === null || _b === void 0 ? void 0 : _b.statusCode) == "000") {
             return {
                 success: true,
                 message: "success",
-                data: res.data,
+                data: res.data
             };
         }
         else {
             return {
                 success: false,
                 message: res.data.errorDesc,
-                data: res.data,
+                data: res.data
             };
         }
     }
     catch (error) {
-        console.log("FAILED", (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data);
+        console.log("FAILED", (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.data);
         return {
             success: false,
-            message: ((_c = (_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.message) || "error",
+            message: ((_e = (_d = error === null || error === void 0 ? void 0 : error.response) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.message) || "error"
         };
     }
 };
 const CHECKER_CARD_PAY = async (transactionId) => {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e;
     try {
         const data = {
             checksum: "",
-            transactionId: transactionId,
+            transactionId: transactionId
         };
         data.checksum = await hmac256(_1.default.key, `${data.transactionId}${data.transactionId}`);
         const res = await axios_1.default.post(`${_1.default.host}/api/check`, data, {
             headers: {
                 Authorization: `Bearer ${_1.default.token}`,
-                "Content-Type": "application/json",
-            },
+                "Content-Type": "application/json"
+            }
         });
-        if (res.data.errorCode == "000") {
+        if (((_a = res.data) === null || _a === void 0 ? void 0 : _a.errorCode) == "000" || ((_b = res.data) === null || _b === void 0 ? void 0 : _b.statusCode) == "000") {
             return {
                 success: true,
                 message: "success",
-                data: res.data,
+                data: res.data
             };
         }
         else {
             return {
                 success: false,
                 message: res.data.errorDesc,
-                data: res.data,
+                data: res.data
             };
         }
     }
     catch (error) {
-        console.log("FAILED", (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data);
+        console.log("FAILED", (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.data);
         return {
             success: false,
-            message: ((_c = (_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.message) || "error",
+            message: ((_e = (_d = error === null || error === void 0 ? void 0 : error.response) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.message) || "error"
+        };
+    }
+};
+const REFUND = async (transactionId) => {
+    var _a, _b, _c, _d, _e;
+    try {
+        const data = {
+            checksum: "",
+            txnId: transactionId
+        };
+        data.checksum = await hmac256(_1.default.key, `${data.txnId}${data.txnId}`);
+        const res = await axios_1.default.post(`${_1.default.host}/payment/void`, data, {
+            headers: {
+                Authorization: `Bearer ${_1.default.token}`,
+                "Content-Type": "application/json"
+            }
+        });
+        if (((_a = res.data) === null || _a === void 0 ? void 0 : _a.errorCode) == "000" || ((_b = res.data) === null || _b === void 0 ? void 0 : _b.statusCode) == "000") {
+            return {
+                success: true,
+                message: "success",
+                data: res.data
+            };
+        }
+        else {
+            return {
+                success: false,
+                message: res.data.errorDesc,
+                data: res.data
+            };
+        }
+    }
+    catch (error) {
+        console.log("FAILED", (_c = error === null || error === void 0 ? void 0 : error.response) === null || _c === void 0 ? void 0 : _c.data);
+        return {
+            success: false,
+            message: ((_e = (_d = error === null || error === void 0 ? void 0 : error.response) === null || _d === void 0 ? void 0 : _d.data) === null || _e === void 0 ? void 0 : _e.message) || "error"
         };
     }
 };
@@ -192,7 +229,7 @@ const getSettlementDetails = async (page, size, startDate, endDate, merchantId) 
         const data = {
             checksum: "",
             token: _1.default.token,
-            merchantId: merchantId,
+            merchantId: merchantId
         };
         // Generate checksum
         data.checksum = await hmac256(_1.default.key, `${data.merchantId}${data.token}`);
@@ -203,8 +240,8 @@ const getSettlementDetails = async (page, size, startDate, endDate, merchantId) 
         const res = await axios_1.default.post(`${_1.default.host}/api/getSettlementDetails?page=${page}&size=${size}&start=${startDate}&end=${endDate}`, data, {
             headers: {
                 Authorization: `Bearer ${_1.default.token}`,
-                "Content-Type": "application/json",
-            },
+                "Content-Type": "application/json"
+            }
         });
         // Handle success response
         if (res.data.errorCode === "000") {
@@ -212,13 +249,13 @@ const getSettlementDetails = async (page, size, startDate, endDate, merchantId) 
                 success: true,
                 message: "Request successful",
                 data: res.data.content,
-                pageable: res.data.pageable,
+                pageable: res.data.pageable
             };
         }
         else {
             return {
                 success: false,
-                message: res.data.errorDesc || "Unknown error",
+                message: res.data.errorDesc || "Unknown error"
             };
         }
     }
@@ -226,7 +263,7 @@ const getSettlementDetails = async (page, size, startDate, endDate, merchantId) 
         console.log("FAILED", (_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data);
         return {
             success: false,
-            message: ((_c = (_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.message) || "error",
+            message: ((_c = (_b = error === null || error === void 0 ? void 0 : error.response) === null || _b === void 0 ? void 0 : _b.data) === null || _c === void 0 ? void 0 : _c.message) || "error"
         };
     }
 };
@@ -236,4 +273,5 @@ exports.default = {
     CARD_PAY,
     CHECKER_CARD_PAY,
     getSettlementDetails,
+    REFUND
 };

@@ -49,7 +49,7 @@ const CREATE = async (
       genToken: body.genToken,
       returnType: "GET",
       transactionId: await mongoObjectId(),
-      socialDeeplink: body.socialDeeplink,
+      socialDeeplink: body.socialDeeplink
     };
     data.checksum = await hmac256(
       SOCIAL_PAY.key,
@@ -58,8 +58,8 @@ const CREATE = async (
     const res = await axios.post(`${SOCIAL_PAY.host}/api/invoice`, data, {
       headers: {
         Authorization: `Bearer ${SOCIAL_PAY.token}`,
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
     if (res.data) {
       return {
@@ -73,7 +73,7 @@ const CREATE = async (
                 res.data?.invoice || "",
             mn:
               "https://ecommerce.golomtbank.com/payment/mn/" +
-                res.data?.invoice || "",
+                res.data?.invoice || ""
           },
           url_socialpay: {
             en:
@@ -81,21 +81,21 @@ const CREATE = async (
                 res.data?.invoice || "",
             mn:
               "https://ecommerce.golomtbank.com/socialpay/mn/" +
-                res.data?.invoice || "",
-          },
-        },
+                res.data?.invoice || ""
+          }
+        }
       };
     } else {
       return {
         success: false,
-        message: res.data.message || "",
+        message: res.data.message || ""
       };
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log("FAILED", error?.response?.data);
     return {
       success: false,
-      message: error?.response?.data?.message || "error",
+      message: error?.response?.data?.message || "error"
     };
   }
 };
@@ -109,7 +109,7 @@ const CHECKER = async (
   try {
     const data = {
       checksum: "",
-      transactionId: transactionId,
+      transactionId: transactionId
     };
     data.checksum = await hmac256(
       SOCIAL_PAY.key,
@@ -118,27 +118,27 @@ const CHECKER = async (
     const res = await axios.post(`${SOCIAL_PAY.host}/api/inquiry`, data, {
       headers: {
         Authorization: `Bearer ${SOCIAL_PAY.token}`,
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
-    if (res.data.errorCode == "000") {
+    if (res.data?.errorCode == "000" || res.data?.statusCode == "000") {
       return {
         success: true,
         message: "success",
-        data: res.data,
+        data: res.data
       };
     } else {
       return {
         success: false,
         message: res.data.errorDesc,
-        data: res.data,
+        data: res.data
       };
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log("FAILED", error?.response?.data);
     return {
       success: false,
-      message: error?.response?.data?.message || "error",
+      message: error?.response?.data?.message || "error"
     };
   }
 };
@@ -164,7 +164,7 @@ const CARD_PAY = async (body: {
       checksum: "",
       transactionId: await mongoObjectId(),
       lang: "en",
-      token: body.token,
+      token: body.token
     };
     data.checksum = await hmac256(
       SOCIAL_PAY.key,
@@ -173,27 +173,27 @@ const CARD_PAY = async (body: {
     const res = await axios.post(`${SOCIAL_PAY.host}/api/pay`, data, {
       headers: {
         Authorization: `Bearer ${SOCIAL_PAY.token}`,
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
-    if (res.data.errorCode == "000") {
+    if (res.data?.errorCode == "000" || res.data?.statusCode == "000") {
       return {
         success: true,
         message: "success",
-        data: res.data,
+        data: res.data
       };
     } else {
       return {
         success: false,
         message: res.data.errorDesc,
-        data: res.data,
+        data: res.data
       };
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log("FAILED", error?.response?.data);
     return {
       success: false,
-      message: error?.response?.data?.message || "error",
+      message: error?.response?.data?.message || "error"
     };
   }
 };
@@ -215,7 +215,7 @@ const CHECKER_CARD_PAY = async (
   try {
     const data = {
       checksum: "",
-      transactionId: transactionId,
+      transactionId: transactionId
     };
     data.checksum = await hmac256(
       SOCIAL_PAY.key,
@@ -224,27 +224,72 @@ const CHECKER_CARD_PAY = async (
     const res = await axios.post(`${SOCIAL_PAY.host}/api/check`, data, {
       headers: {
         Authorization: `Bearer ${SOCIAL_PAY.token}`,
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     });
-    if (res.data.errorCode == "000") {
+    if (res.data?.errorCode == "000" || res.data?.statusCode == "000") {
       return {
         success: true,
         message: "success",
-        data: res.data,
+        data: res.data
       };
     } else {
       return {
         success: false,
         message: res.data.errorDesc,
-        data: res.data,
+        data: res.data
       };
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log("FAILED", error?.response?.data);
     return {
       success: false,
-      message: error?.response?.data?.message || "error",
+      message: error?.response?.data?.message || "error"
+    };
+  }
+};
+const REFUND = async (
+  transactionId: string
+): Promise<{
+  success: boolean;
+  message: string;
+  data?: {
+    statusCode: string;
+    desc: string;
+    txnId: string;
+    merchantId: string;
+  };
+}> => {
+  try {
+    const data = {
+      checksum: "",
+      txnId: transactionId
+    };
+    data.checksum = await hmac256(SOCIAL_PAY.key, `${data.txnId}${data.txnId}`);
+    const res = await axios.post(`${SOCIAL_PAY.host}/payment/void`, data, {
+      headers: {
+        Authorization: `Bearer ${SOCIAL_PAY.token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if (res.data?.errorCode == "000" || res.data?.statusCode == "000") {
+      return {
+        success: true,
+        message: "success",
+        data: res.data
+      };
+    } else {
+      return {
+        success: false,
+        message: res.data.errorDesc,
+        data: res.data
+      };
+    }
+  } catch (error: any) {
+    console.log("FAILED", error?.response?.data);
+    return {
+      success: false,
+      message: error?.response?.data?.message || "error"
     };
   }
 };
@@ -293,7 +338,7 @@ const getSettlementDetails = async (
     const data = {
       checksum: "",
       token: SOCIAL_PAY.token,
-      merchantId: merchantId,
+      merchantId: merchantId
     };
 
     // Generate checksum
@@ -315,8 +360,8 @@ const getSettlementDetails = async (
       {
         headers: {
           Authorization: `Bearer ${SOCIAL_PAY.token}`,
-          "Content-Type": "application/json",
-        },
+          "Content-Type": "application/json"
+        }
       }
     );
 
@@ -326,19 +371,19 @@ const getSettlementDetails = async (
         success: true,
         message: "Request successful",
         data: res.data.content,
-        pageable: res.data.pageable,
+        pageable: res.data.pageable
       };
     } else {
       return {
         success: false,
-        message: res.data.errorDesc || "Unknown error",
+        message: res.data.errorDesc || "Unknown error"
       };
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log("FAILED", error?.response?.data);
     return {
       success: false,
-      message: error?.response?.data?.message || "error",
+      message: error?.response?.data?.message || "error"
     };
   }
 };
@@ -348,4 +393,5 @@ export default {
   CARD_PAY,
   CHECKER_CARD_PAY,
   getSettlementDetails,
+  REFUND
 };
