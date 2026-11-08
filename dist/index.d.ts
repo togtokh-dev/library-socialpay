@@ -10,7 +10,7 @@ declare const _default: {
     };
     invoice: {
         CREATE: (body: {
-            amount: string | number;
+            amount: number | string;
             callback: string;
             genToken: "Y" | "N";
             socialDeeplink: "Y" | "N";
@@ -34,7 +34,7 @@ declare const _default: {
             data?: any;
         }>;
         CARD_PAY: (body: {
-            amount: string | number;
+            amount: number | string;
             token: string;
         }) => Promise<{
             success: boolean;

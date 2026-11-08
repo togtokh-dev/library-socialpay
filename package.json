@@ -1,7 +1,7 @@
 {
   "name": "@togtokh.dev/socialpay",
-  "version": "0.0.9",
-  "description": "SOCIAL_PAY is a library for qpay payment gateway. It is a wrapper for axios and https module. It is a simple and easy-to-use library for SOCIAL_PAY payment gateway. It is a wrapper for axios and https module. It is a simple and easy-to-use library for SOCIAL_PAY payment gateway api",
+  "version": "0.0.10",
+  "description": "SocialPay (Golomt) payment gateway client for Node.js & TypeScript — invoice create, status check and card payment.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -10,13 +10,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-ts": "rm -rf ./dist && npx tsc",
-    "build": "npx tsc",
+    "build": "rm -rf ./dist && npx tsc",
     "debug": "npm run build && npm run watch-debug",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/togtokh-dev/library/payment/socialpay.git"
+    "url": "git+https://github.com/togtokh-dev/library-socialpay.git"
   },
   "keywords": [
     "socialpay",
@@ -26,9 +26,9 @@
   "author": "TOGTOKH.DEV",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/togtokh-dev/library/payment/socialpay/issues"
+    "url": "https://github.com/togtokh-dev/library-socialpay/issues"
   },
-  "homepage": "https://gitlab.com/togtokh-dev/library/payment/socialpay/#readme",
+  "homepage": "https://github.com/togtokh-dev/library-socialpay#readme",
   "dependencies": {
     "axios": "^1.6.7",
     "https": "^1.0.0",
